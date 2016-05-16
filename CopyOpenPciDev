@@ -1,0 +1,17 @@
+makedir /OpenPciDev/fd
+copy fd/openpci_lib.fd /OpenPciDev/fd/
+makedir /OpenPciDev/proto
+copy proto/openpci.h /OpenPciDev/proto/
+makedir /OpenPciDev/pragmas
+copy pragmas/openpci_pragmas.h /OpenPciDev/pragmas/
+makedir /OpenPciDev/clib
+copy clib/openpci_protos.h /OpenPciDev/clib/
+makedir /OpenPciDev/libraries
+copy libraries/openpci.h /OpenPciDev/libraries/
+copy openpci.library /OpenPciDev/
+makedir /OpenPciDev/OpenPciInfo
+copy OpenPciInfo/#? /OpenPciDev/OpenPciInfo/
+makedir /OpenPciDev/Doc
+copy Doc/ /OpenPciDev/Doc/
+makedir /OpenPciDev/RTL8139Device
+copy /RTL8139Device/rtl8139.device /OpenPciDev/RTL8139Device/

@@ -1,0 +1,2 @@
+all:
+		sc lib=lib:debug.lib nostackcheck data=far code=far nosmallcode nosmalldata OpenPciInfo.c link to OpenPciInfo

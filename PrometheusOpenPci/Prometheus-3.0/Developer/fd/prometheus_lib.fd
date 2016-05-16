@@ -1,0 +1,20 @@
+##base _PrometheusBase
+##bias 30
+##public
+Prm_FindBoardTagList(previous,taglist)(a0/a1)
+Prm_GetBoardAttrsTagList(board,taglist)(a0/a1)
+*--- functions added in V2 ---
+Prm_ReadConfigLong(board,offset)(a0/d0)
+Prm_ReadConfigWord(board,offset)(a0/d0)
+Prm_ReadConfigByte(board,offset)(a0/d0)
+Prm_WriteConfigLong(board,data,offset)(a0/d0/d1)
+Prm_WriteConfigWord(board,data,offset)(a0/d0/d1)
+Prm_WriteConfigByte(board,data,offset)(a0/d0/d1)
+Prm_SetBoardAttrsTagList(board,taglist)(a0/a1)
+Prm_AddIntServer(board,intr)(a0/a1)
+Prm_RemIntServer(board,intr)(a0/a1)
+Prm_AllocDMABuffer(size)(d0)
+Prm_FreeDMABuffer(block,size)(a0/d0)
+Prm_GetPhysicalAddress(addr)(d0)
+##end
+

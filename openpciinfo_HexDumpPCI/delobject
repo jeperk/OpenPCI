@@ -1,0 +1,8 @@
+delete #?.o68k
+delete #?.oPPC
+delete #?.lnk
+delete #?.lst
+delete #?.lst.info
+
+
+

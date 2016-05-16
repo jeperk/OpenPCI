@@ -1,0 +1,81 @@
+News in V2.1 beta4 (October 08, 2009)
+- Mediator : Removed requirement of GFX card for DMA buffer (if no GFX card DMA allocation disabled and return NULL).
+- Mediator : Added support for Voodoo Banshee(VendorID/ProductID=0x121a/0x0003) for DMA memory.
+- Mediator : Fixed S3 Virge 86C325(VendorID/ProductID=0x5333/0x8a01) DMA memory and added support for S3 Virge DX 86C375(VendorID/ProductID=0x5333/0x5631) for DMA memory(need some tests and feedback).
+- Added new MediatorA1200TX support (Thanks to Robert 'Phibrizzo' Krajcarz).
+
+News/Fixes in V2.1
+- Grex & Pegasos1/2 : Fixed a bug in pci_read_config_long() who return bad result for registernum >16 (Thanks to Guido Mersmann)
+- Add Mediator1200SX support (Thanks to Thomas Siegel)
+- Prometheus : Fixed IO or Mem Address detection bit in base_size (Bit0 set to 1=IO Address, Bit0 set to 0=Mem Address) (Titan)
+- Prometheus : Fixed Read/WriteConfXXX, pci_physic_to_logic_addr, pci_set_master & 
+    pci_obtain_card/pci_release_card requires prometheus.library v3 (Titan)
+- Pegasos1/2 & Grex : Fixed Address base value for ROM, pci_obtain_card/pci_release_card bug/crash (Titan)
+- Mediator : Fixed pci_obtain_card/pci_release_card (Titan)
+- Amithlon : Fixed pci_obtain_card/pci_release_card (Titan)
+
+News in V2.0
+
+- New functions : pci_physic_to_logic_addr()/pci_obtain_card()/pci_release_card()
+- This version is fully compatible with old drivers developped for openpci v1.x but i advise you
+to support new pci card lock mechanism (pci_obtain_card()/pci_release_card()) to avoid problems 
+with drivers who use the same pci card.
+- Fixed read & write_config for Prometheus
+- Use lock mechanism of Prometheus, Amithlon, Grex
+Warning this library support Mediator and i haven't tested it on 
+Mediator, Prometheus, Grex, Amithlon but it could work.
+Please test and send me feedback for Mediator, Prometheus, Grex, Amithlon, Pegasos1 & Pegasos2.
+
+Informations:
+
+The openpci.library currently support fully MediatorA1200/Z4, Pegasos1/2, GrexA1200, GrexA4000, Amithlon and Prometheus.
+Prometheus wrapper is finished but need more testing.
+
+openpci.library.elf :
+- This is for MorphOS and Pegasos, it's a PPC MorphOS native version.
+- This native PPC MorphOS native version support Pegasos1/2, GrexA1200, GrexA4000, Prometheus PCI Bus.
+
+For Pegasos1/2 use openpci.library.elf ONLY and remove openpci.library if it exist,
+because openpci.library doesn't support Pegasos1/2.
+
+openpci.library:
+- This is a 68k version for AmigaOS 3.x and Amithlon
+- This version support Mediator A1200, GrexA1200, GrexA4000, Prometheus, PC PCI Bus under Amithlon.
+
+Details of Mediator board supported in OpenPCI:
+1) Mediator1200 => Expansion Products: MediatorA1200(0x20)+MediatorA1200 MEMORY(0xa0)
+2) Mediator1200SX => Expansion Products: MediatorA1200(0x28)+MediatorA1200 MEMORY(0xa8)
+3) Mediator1200TX => Expansion Products: MediatorA1200(0x3c)+MediatorA1200 MEMORY(0xbc)
+4) MediatorZ4 => Expansion Products: MediatorZ4(0x1f)+MediatorZ4 MEMORY(0x9f)
+5) MediatorZ4 => Expansion Products: MediatorZ4(0x21)+MediatorZ4 MEMORY(0xa1)
+
+Details of Mediator GFX card DMA memory supported in OpenPCI:
+1) Voodoo Banshee 16MB VendorID/ProductID=0x121a/0x0003
+2) Voodoo3/2000-3000 16MB VendorID/ProductID=0x121a/0x0005
+3) Voodoo4/5 32MB/64MB VendorID/ProductID=0x121a/0x0009
+4) S3 Virge 86C325 2/4MB VendorID/ProductID=0x5333/0x8a01
+5) S3 Virge DX 86C375 2/4MB VendorID/ProductID=0x5333/0x5631
+
+Note: Total available DMA memory is configured to 256KB.
+Warning!!! If you have not one of this GFX card, the DMA memory is disabled and all drivers which requires DMA memory will not work (driver like RTL8139, USB ... will not work).
+
+Not supported Mediator due to lack on information on these boards (contact me):
+I need more expansion information(showconfig) on following Product MediatorXXX/MEMORY.
+1) Mediator Unknown1 => Expansion Products: Mediator???0x30)+Mediator??? MEMORY(0xb0)
+2) Mediator Unknown2 => Expansion Products: Mediator???(0x31)+Mediator??? MEMORY(0xb1)
+Any other number ... contact me.
+
+Requirements:
+
+To use openpci.library driver with GrexA1200-A4000 or Pegasos board you need:
+cybpci.library v2.x or more
+68040 or 68060.library by Ralph Schmidt v44 or more 
+You can download all this files to: 
+http://www.vgr.com/grex/
+
+To use openpci.library driver with Prometheus board you need:
+prometheus.library v3.x or more
+
+To use openpci.library driver with Amithlon board you need:
+powerpci.library v2.xx or more
+

@@ -1,0 +1,388 @@
+@DATABASE developer.guide
+@$VER: developer.guide 1.50 (25.7.2001)
+@(C) Copyright by Matay 2001
+@AUTHOR Grzegorz "Krashan" Kraszewski <krashan@matay.pl>
+@REM translated by Grzegorz Juraszek <fei@matay.pl>
+@SMARTWRAP
+
+@NODE main "Contents"
+@{JCENTER}
+
+
+@{B}@{BG text}@{FG shine}  P R O M E T H E U S  @{BG background}@{FG text}
+
+
+@{B}Information for programmers @{UB}
+
+
+@{I}Version 1.50 (25 July 2001) @{UI}
+
+
+@{JLEFT}
+@{TAB}Contents:
+
+
+@{TAB}@{TAB}@{"  Basic information about PCI  " LINK pci_intro}
+
+@{TAB}@{TAB}@{"  Prometheus operation basics  " LINK prometheus_basics}
+
+@{TAB}@{TAB}@{"  prometheus.library  " LINK prometheus_library}
+
+@{TAB}@{TAB}@{"  Memory address map  " LINK memory_map}
+
+@{TAB}@{TAB}@{"  Byte ordering  " LINK byte_ordering}
+
+@{TAB}@{TAB}@{"  Slow PCI cards  " LINK slow_cards}
+
+@{TAB}@{TAB}@{"  Interrupt handling  " LINK interrupts}
+
+@{TAB}@{TAB}@{"  Change log  " LINK change_log}
+
+@ENDNODE
+@NODE pci_intro "Introduction to PCI"
+@{B}Basic information about PCI @{UB}
+
+
+This chapter will provide you with necessary programming information about
+PCI standard. PCI @{I}(Peripherial Component Interface) @{UI} is a
+universal 32-bit bus designed to connect the CPU and peripherals of a
+computer system. The popularity of PCI interface in PC systems resulted in
+a wide variety of cheap PCI cards available in the market. Prometheus is
+one of solutions that allow to use such cards with Amiga.
+
+
+The PCI bus has two 32-bit memory addressing spaces - an input/output space
+and a memory space. Together, it gives 8 GB of continuous address space.
+The names are conventional, usually cards put in the I/O address area own
+control registers while in the memory space they put memory buffers (like
+video memory of a graphics card). The registers often are duplicated in
+both spaces. The I/O space area can be from 4 bytes to 4 GB long, the
+memory area can be from 16 bytes to 4 GB long. Amiga does not allow such
+large spaces, so Prometheus provides only a fragment of that space, 511 MB
+of the memory area and 960 kB of the I/O area to be exact
+(see @{"memory map" LINK memory_map}).
+
+
+Every PCI card needs configuration before it is available for use. That
+configuration allocates dynamic addresses to a PCI card, which can demand
+from the system allocation of maximum six address areas in both address
+spaces. In a Prometheus equipped system, the prometheus.library does that
+work automatically while the system is booting. The drivers of each card
+can locate and read their base addresses using functions implemented in
+that library.
+
+@ENDNODE
+@NODE memory_map "Memory address map"
+@{B}Division of the Prometheus address space @{UB}
+
+
+Informations provided below are not necessary for programmers working with
+AmigaOS. They @{U}should@{UU} use prometheus.library functions instead.
+Knowledge of the Prometheus memory map can however be necessary for those
+who will write drivers for other systems, like for example @{B}Linux @{UB}or
+@{B}NetBSD.@{UB}
+
+
+Prometheus takes 512 MB of the Amiga address space. The card address
+depends on what other Zorro III cards are installed in the system. In case
+Prometheus is the only Z III card, it is allocated by the system in the
+$40000000 - $5FFFFFFF address range. However, do not assume this address
+is fixed and @{U}always@{UU} read it from the dynamic tables created by the
+operating system.
+
+
+As you have already read, PCI has three address spaces that must fit
+together into one address space of the Amiga system. Therefore, different
+Prometheus address space fragments are assigned to specific address spaces
+of the PCI bus.
+
+
+Here is the memory map, the addresses given are shifts to the base address
+of the card:
+
+
+$00000000 - $000EFFFF @{TAB}Input/output PCI space (960 kB)
+
+$000F0000 - $000F00FF @{TAB}Configuration space of the slot 0 (256 B)
+
+$000F0100 - $000F1FFF @{TAB}Reserved
+
+$000F2000 - $000F20FF @{TAB}Configuration space of the slot 1 (256 B)
+
+$000F2100 - $000F3FFF @{TAB}Reserved
+
+$000F4000 - $000F40FF @{TAB}Configuration space of the slot 2 (256 B)
+
+$000F4100 - $000F5FFF @{TAB}Reserved
+
+$000F6000 - $000F60FF @{TAB}Configuration space of the slot 3 (256 B)
+
+$000F6100 - $000FFFFF @{TAB}Reserved
+
+$00100000 - $1FFFFFFF @{TAB}PCI memory area (511 MB)
+
+
+While allocating the address spaces to the PCI cards, please remember about
+the address space requirements of the card. Let me remind you once more
+that in AmigaOS the work is done by the prometheus.library.
+
+@ENDNODE
+@NODE byte_ordering "Byte ordering problem"
+@{B}Byte ordering problem @{UB}
+
+
+While programming PCI cards, one can face the byte ordering problem in 16
+and 32-bit words. The majority of CPU designs, M68k and PPC processors
+included, use a convention according to which bytes are put in a word in a
+more-less importance order:
+
+
+@{TAB}0@{TAB}@{TAB}1@{TAB}@{TAB}2@{TAB}@{TAB}3
+
+@{TAB}bits 31-24@{TAB}bits 23-16@{TAB}bits 15-8@{TAB}bits 7-0
+
+
+Unfortunately, in x86 Intel compatibles, bytes are put in memory in the
+reversed order:
+
+
+@{TAB}0@{TAB}@{TAB}1@{TAB}@{TAB}2@{TAB}@{TAB}3
+
+@{TAB}bits 7-0 @{TAB}bits 15-8@{TAB}bits 23-16@{TAB}bits 31-24
+
+
+As majority of PCI cards is designed to work with PC systems, such a byte
+order is the most probable to appear. To make things easier, Prometheus is
+equipped with a @{B}hardware byte swapping circuit @{UB}that swaps
+bytes on-the-fly, without time delays. Therefore, you can program PCI
+cards in the same way they are programmed in PC systems. The circuit works in
+both directions, so if you want to write, for example, $DEADBACA in the
+32-bit card register, the Prometheus follows the Intel convention and in the following
+register bytes $CA, $BA, $AD, $DE will be put. However, when you read the
+register, you get $DEADBACA again.
+
+
+Authors of drivers for systems other than AmigaOS will face one exception
+from the rule. The configuration registers of PCI cards compatible with
+PCI 2.1 specification have bytes ordered according to the Motorola
+convention. As the swapping circuit in Prometheus cannot be switched off,
+while accessing the configuration area the driver should neutralise the
+conversion. It can be done by such assembler sequence:
+
+
+@TAB 16
+@{TAB}ROL.W @{TAB}#8,d0
+
+@{TAB}SWAP  @{TAB}d0
+
+@{TAB}ROL.W @{TAB}#8,d0
+@TAB 8
+
+
+You will find appropriate swapl() and swapw() macros for GCC compiler in
+the SDK includes. In the AmigaOS, the card configuration is done by the
+prometheus.library, so the problem does not exist.
+
+@ENDNODE
+@NODE prometheus_basics "Prometheus operation basics"
+@{B}Prometheus operation basics @{UB}
+
+
+Prometheus is a transparent Zorro III to PCI bridge. Each Zorro III
+transaction is translated to the appropriate PCI transaction. Transparency
+means that no special data read/write functions for PCI cards are needed.
+The cards can be treated as CPU address areas of the Amiga system.
+However, please pay attention to the CPU cache memory. AutoConfig
+procedures of the AmigaOS automatically disable the CPU cache for the
+address spaces taken by Prometheus. It is possible for MMU equipped CPUs,
+so problems appear when we deal with a 68EC030 CPU which does not have a
+MMU unit. In such cases, the cache memory can be flushed by the
+CacheClearU() or better CacheClearE() function that can flush only data
+cache.
+
+@ENDNODE
+@NODE prometheus_library "prometheus.library and its functions"
+@{B}prometheus.library and its functions @{UB}
+
+
+prometheus.library is added to the system when it is opened first time
+by a driver or an application. The library detects PCI cards put in the
+Prometheus slots and configures them. Then it stays in the system to
+allow seeking for available PCI cards and provides information about
+them. If you want to check if a given PCI card is installed, use the
+Prm_FindBoardTagList() function. The Prm_GetBoardAttrsTagList() function
+can be used to give information about the found card (addresses and
+allocated space lengths included). Both functions are described in the
+library autodoc in details. An example program that uses this
+prometheus.library functions is PrmScan which displays information about
+all PCI cards found in the system. Its source code is included in this
+SDK.
+
+@ENDNODE
+@NODE slow_cards "Slow PCI cards problems"
+@{B}Slow PCI cards problems @{UB}
+
+
+The PCI specification recommends each card to start the write (or read)
+operation not later than 8 clock cycles after the PCI cycle start.
+Unfortunately, some cards in some cases are not able to do that. Such
+situation occurs, for example, while reading some graphic cards ROM memory.
+In such case, the card sends a "Retry" reply and asks the
+transaction initiator to repeat the cycle. However, it is not always
+possible during one Zorro III bus cycle. The Amiga hardware design limits
+the Zorro III bus cycle time to about 1 microsecond. If the cycle cannot
+end during that time, it is interrupted and a bus error is generated. To
+prevent the system hang-up, Prometheus does not repeat the transaction when a
+"Retry" reply is sent and returns the $FFFFFFFF value in case of the read
+attempt. In such case, a read operation should be repeated. Such a
+solution is exemplified in the source code of the RomDump program.
+
+
+@{I}NOTE: @{UI}
+
+The only example known so far of the case described above is the ROM memory
+read operation of the Voodoo3 graphics card.
+
+@ENDNODE
+
+@NODE interrupts "Interrupts handling"
+@{B}Handling interrupts from PCI cards @{UB}
+
+
+PCI bus specification specifies 4 interrupts lines named from @{B}INTA @{UB}
+to @{B}INTD@{UB}. These lines are asynchronous to PCI bus clock, it
+means every card can signal an interrupt (setting one of the lines to
+the low logic state) at any time. Prometheus handles all 4 interrupt
+lines. Every interrupt on any of lines is forwarded to Zorro III @{B}INT2 @{UB}
+line.
+
+
+Interrupt server procedure is added to the system as usual by means of
+@{I}AddIntServer() @{UI}function. Here is a C source example:
+
+
+@{FG HIGHLIGHT}struct Interrupt *InstallInterrupt(APTR useful_data, APTR my_int_code)
+
+ {
+
+  struct Interrupt *my_int;
+
+
+  if (my_int = AllocMem(sizeof(struct Interrupt), MEMF_PUBLIC | MEMF_CLEAR))
+
+   {
+
+    my_int->is_Node.ln_Type = NT_INTERRUPT;
+
+    my_int->is_Node.ln_Name = "My clever interrupt routine";
+
+    my_int->is_Data = useful_data;
+
+    my_int->is_Code = my_int_code;
+
+    AddIntServer(INTB_PORTS, my_int);
+
+    return my_int;
+
+   }
+
+  return NULL;
+
+ }@{FG TEXT}
+
+
+@{I}my_int_code @{UI}parameter is an address of interrupt code entry,
+@{I}useful_data @{UI}can serve as a pointer to any useful data accessed
+from interrupt code. The first thing you have to do in an interrupt
+routine is check if this interrupt has been generated by "your" PCI
+card. You can do it checking card's interrupt related registers. If it
+has been generated by something else, you should exit immediately with Z
+processor flag set (on most of C compilers 'return 0' expression sets Z
+flag). Otherwise you can serve the interrupt and clear Z processor flag
+(on most od C compilers 'return 1' expression clears Z flag). Here is an
+exapmle taken from RTL8029 chipset based network controllers:
+
+
+@{FG SHINE}/* a0, a1, d0, d1 are trash registers here */
+
+/* compiler should save other regs on the stack. */
+
+
+LONG IntCode (struct TaskData *td reg(a1))
+
+ {
+
+  UBYTE intstatus;
+
+
+  if (intstatus = td->td_EtherBase->regs[NE2000_INT_STATUS])
+
+   {
+
+    td->td_EtherBase->regs[NE2000_INT_STATUS] = 0xFF;
+
+    if (intstatus & INT_RXPACKET) PacketReceived(td);
+
+    /* ... */
+
+    return 1;
+
+   }
+
+  return 0;
+
+ }@{FG TEXT}
+
+
+At interrupt routine entry A1 register contains a pointer to data placed
+earlier in @{I}is_Data @{UI} field of @{I}Interrupt @{UI}structure. In
+the interrupt code registers D0, D1, A0, A1, A5 i A6 can be used as
+scratch, others must be saved on the stack. C compilers do this
+automatically. Interrupt handling routines must conform to rules and
+recommendations described in @{I}ROM Kernel Manuals.@{UI} Interrupt code
+written for other operating systems should of course meet these systems
+requirements.
+
+@ENDNODE
+
+
+
+
+@NODE change_log "Change log"
+
+@{B}Change log @{UB}
+
+
+@{I}Version 1.50 (25 July 2001) @{UI}
+
+@TAB 3
+@{LINDENT 3}@{PARI -2}@{B} *@{TAB}@{UB}Removed bug in internal PCI cards
+list initialization. The bug caused PrmScan to fall in an infinite loop if
+there is no PCI cards installed in the Prometheus.@{PARD}
+
+
+@{LINDENT 3}@{PARI -2}@{B} *@{TAB}@{UB}Function Prm_FindBoardTagList()
+now accepts NULL as a taglist pointer. It has the same meaning as empty
+(containing only TAG_END) tagilst. Autodocs has been updated.@{PARD}
+
+
+@{LINDENT 3}@{PARI -2}@{B} *@{TAB}@{UB}A protection in Prm_GetBoardAttrsTagList()
+has bin added against NULL pointer in ti_Data field of a tag. NULL
+pointer caused longword write at $00000000 address. Now any tag with
+NULL in ti_Data is just skipped.@{PARD}
+
+
+@{LINDENT 3}@{PARI -2}@{B} *@{TAB}@{UB}Include files for VBCC, StormC,
+SAS/C and other compilers addeed. Some minor bugs in GCC includes fixed.
+Example programs should now compile on every popular Amiga C compiler.@{PARD}
+
+
+@{I}Version 1.49 (7 July 2001) @{UI}
+
+@TAB 3
+@{LINDENT 3}@{PARI -2}@{B} *	@{UB}Library initialization has been
+changed. It doesn't use BindDrivers command anymore. The library has
+been moved from @{I}SYS:Expansion/ @{UI}directory to @{I}LIBS:. @{UI}
+
+@ENDNODE
+

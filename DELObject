@@ -1,0 +1,23 @@
+delete #?.o
+delete #?.lnk
+delete #?.lst
+delete #?.lst.info
+delete MediatorOpenPci/#?.o
+delete MediatorOpenPci/#?.lnk
+delete MediatorOpenPci/#?.lst
+delete MediatorOpenPci/#?.lst.info
+delete PrometheusOpenPci/#?.o
+delete PrometheusOpenPci/#?.lnk
+delete PrometheusOpenPci/#?.lst
+delete PrometheusOpenPci/#?.lst.info
+delete GrexOpenPci/#?.o
+delete GrexOpenPci/#?.lnk
+delete GrexOpenPci/#?.lst
+delete GrexOpenPci/#?.lst.info
+delete PowerpciOpenPci/#?.o
+delete PowerpciOpenPci/#?.lnk
+delete PowerpciOpenPci/#?.lst
+delete PowerpciOpenPci/#?.lst.info
+
+
+

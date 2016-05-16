@@ -1,0 +1,158 @@
+all: openpci.library
+
+openpci.library: openpci.o\
+					  pci_find.o pci_readwrite_config.o pci_interrupt.o pci_set_master.o\
+					  pci_allocfree_dma_mem.o pci_in_out.o pci_logictophysic_addr.o\
+					  openpcifunctable.o pcibus.o debug.o GrexOpenPci/memory.o\
+					  GrexOpenPci/GrexWrapper.o\
+					  GrexOpenPci/Gpci_readwrite_config.o GrexOpenPci/Gpci_set_master.o GrexOpenPci/Gpci_allocfree_dma.o\
+					  GrexOpenPci/Gpci_interrupt.o GrexOpenPci/Gpci_in_out.o GrexOpenPci/Gpci_logictophysic_addr.o\
+					  PrometheusOpenPci/PrometheusWrapper.o\
+					  PrometheusOpenPci/Ppci_readwrite_config.o PrometheusOpenPci/Ppci_set_master.o PrometheusOpenPci/Ppci_allocfree_dma.o\
+					  PrometheusOpenPci/Ppci_interrupt.o PrometheusOpenPci/Ppci_in_out.o PrometheusOpenPci/Ppci_logictophysic_addr.o\
+					  PowerPciOpenPci/PowerPciWrapper.o\
+					  PowerPciOpenPci/Apci_readwrite_config.o PowerPciOpenPci/Apci_set_master.o PowerPciOpenPci/Apci_allocfree_dma.o\
+					  PowerPciOpenPci/Apci_interrupt.o PowerPciOpenPci/Apci_in_out.o PowerPciOpenPci/Apci_logicphysic_addr.o\
+					  
+                   SLINK WITH smakefile.wth				
+                   Copy openpci.library libs:openpci.library
+                   avail flush
+
+openpci.o: openpci.c openpci.library_VERSION.h
+#	$(CC) $*.c DisAssemble ram:openpci.asm
+	$(CC) $*.c
+
+openpcifunctable.o: openpcifunctable.c openpcidata.h openpcifunctable.h
+	$(CC) $*.c
+
+pcibus.o: pcibus.c openpcidata.h
+	$(CC) $*.c
+
+pci_find.o: pci_find.c openpcidata.h
+#	$(CC) $*.c DisAssemble ram:pcifind.asm
+	$(CC) $*.c
+
+pci_in_out.o: pci_in_out.c openpcidata.h
+	$(CC) $*.c
+	
+pci_interrupt.o: pci_interrupt.c openpcidata.h
+	$(CC) $*.c
+
+pci_set_master.o: pci_set_master.c openpcidata.h
+	$(CC) $*.c
+
+pci_readwrite_config.o: pci_readwrite_config.c openpcidata.h
+	$(CC) $*.c
+	
+pci_allocfree_dma_mem.o: pci_allocfree_dma_mem.c openpcidata.h
+	$(CC) $*.c
+
+pci_logictophysic_addr.o: pci_logictophysic_addr.c openpcidata.h
+	$(CC) $*.c
+	
+debug.o: debug.c debug.h
+	$(CC) $*.c
+
+memory.o: memory.c memory.h
+	$(CC) $*.c
+
+#InOut.o: InOut.a
+#	$(CC)	$*.a
+
+#InOut.o: InOut.c
+#	$(CC) $*.c DisAssemble ram:InOut.asm
+		
+# MEDIATOR WRAPPER
+MediatorWrapper.o: MediatorOpenPci/MediatorWrapper.c openpcidata.h openpci_protosWrapper.h MediatorOpenPci/MediatorWrapper.h
+	$(CC) $*.c
+
+Mpci_readwrite_config.o: MediatorOpenPci/Mpci_readwrite_config.c openpcidata.h
+	$(CC) $*.c
+
+Mpci_set_master.o: MediatorOpenPci/Mpci_set_master.c openpcidata.h
+	$(CC) $*.c
+
+Mpci_allocfree_dma.o: MediatorOpenPci/Mpci_allocfree_dma.c openpcidata.h
+	$(CC) $*.c
+
+Mpci_interrupt.o: MediatorOpenPci/Mpci_interrupt.c openpcidata.h
+	$(CC) $*.c
+
+Mpci_in_out.o: MediatorOpenPci/Mpci_in_out.c openpcidata.h InOut.h
+	$(CC) $*.c
+
+Mpci_logictophysic_addr.o: MediatorOpenPci/Mpci_logictophysic_addr.c openpcidata.h
+	$(CC) $*.c
+
+
+# GREX WRAPPER
+GrexWrapper.o: GrexOpenPci/GrexWrapper.c openpcidata.h openpci_protosWrapper.h GrexOpenPci/GrexWrapper.h
+	$(CC) $*.c
+
+Gpci_readwrite_config.o: GrexOpenPci/Gpci_readwrite_config.c openpcidata.h
+	$(CC) $*.c
+
+Gpci_set_master.o: GrexOpenPci/Gpci_set_master.c openpcidata.h
+	$(CC) $*.c
+
+Gpci_allocfree_dma.o: GrexOpenPci/Gpci_allocfree_dma.c openpcidata.h
+	$(CC) $*.c
+
+Gpci_interrupt.o: GrexOpenPci/Gpci_interrupt.c openpcidata.h
+	$(CC) $*.c
+
+Gpci_in_out.o: GrexOpenPci/Gpci_in_out.c openpcidata.h InOut.h
+	$(CC) $*.c
+
+Gpci_logictophysic_addr.o: GrexOpenPci/Gpci_logictophysic_addr.c openpcidata.h
+	$(CC) $*.c
+
+
+
+# PROMETHEUS WRAPPER
+PrometheusWrapper.o: PrometheusOpenPci/PrometheusWrapper.c openpcidata.h openpci_protosWrapper.h PrometheusOpenPci/PrometheusWrapper.h
+	$(CC) $*.c debug=full 
+
+Ppci_readwrite_config.o: PrometheusOpenPci/Ppci_readwrite_config.c openpcidata.h
+	$(CC) $*.c
+
+Ppci_set_master.o: PrometheusOpenPci/Ppci_set_master.c openpcidata.h
+	$(CC) $*.c
+
+Ppci_allocfree_dma.o: PrometheusOpenPci/Ppci_allocfree_dma.c openpcidata.h
+	$(CC) $*.c
+
+Ppci_interrupt.o: PrometheusOpenPci/Ppci_interrupt.c openpcidata.h
+	$(CC) $*.c
+
+Ppci_in_out.o: PrometheusOpenPci/Ppci_in_out.c openpcidata.h InOut.h
+	$(CC) $*.c
+
+Ppci_logictophysic_addr.o: PrometheusOpenPci/Ppci_logictophysic_addr.c openpcidata.h
+	$(CC) $*.c
+
+
+# POWERPCI WRAPPER
+PowerPciWrapper.o: PowerPciOpenPci/PowerPciWrapper.c openpcidata.h openpci_protosWrapper.h PowerPciOpenPci/PowerPciWrapper.h
+	$(CC) $*.c debug=full 
+
+Apci_readwrite_config.o: PowerPciOpenPci/Apci_readwrite_config.c openpcidata.h
+	$(CC) $*.c
+
+Apci_set_master.o: PowerPciOpenPci/Apci_set_master.c openpcidata.h
+	$(CC) $*.c
+
+Apci_allocfree_dma.o: PowerPciOpenPci/Apci_allocfree_dma.c openpcidata.h
+	$(CC) $*.c
+
+Apci_interrupt.o: PowerPciOpenPci/Apci_interrupt.c openpcidata.h
+	$(CC) $*.c
+
+Apci_in_out.o: PowerPciOpenPci/Apci_in_out.c openpcidata.h InOut.h
+	$(CC) $*.c
+
+Apci_logicphysic_addr.o: PowerPciOpenPci/Apci_logicphysic_addr.c openpcidata.h
+	$(CC) $*.c
+
+
+  

@@ -1,0 +1,4 @@
+FROM LIB:c.o "OpenPciInfo.o"
+TO "OpenPciInfo"
+LIB lib:debug.lib LIB:scnb.lib LIB:amiga.lib
+

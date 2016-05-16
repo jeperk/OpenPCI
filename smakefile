@@ -1,0 +1,85 @@
+all: openpci.library
+
+openpci.library: openpci.o\
+					  pci_find.o pci_readwrite_config.o pci_interrupt.o pci_set_master.o\
+					  pci_allocfree_dma_mem.o pci_in_out.o pci_logictophysic_addr.o\
+					  pci_obtainrelease_card.o openpcifunctable.o pcibus.o debug.o GrexOpenPci/memory.o\
+					  PrometheusOpenPci/PrometheusWrapper.o\
+					  PrometheusOpenPci/Ppci_readwrite_config.o PrometheusOpenPci/Ppci_set_master.o PrometheusOpenPci/Ppci_allocfree_dma.o\
+					  PrometheusOpenPci/Ppci_interrupt.o PrometheusOpenPci/Ppci_in_out.o PrometheusOpenPci/Ppci_logictophysic_addr.o PrometheusOpenPci/Ppci_obtainrelease_card.o\
+					  
+				   SLINK WITH FULLsmakefile.wth
+				   #Copy openpci.library libs:openpci.library
+				   #avail flush
+
+openpci.o: openpci.c openpci.library_VERSION.h
+#	$(CC) $*.c DisAssemble ram:openpci.asm
+	$(CC) $*.c
+
+openpcifunctable.o: openpcifunctable.c openpcidata.h openpcifunctable.h
+	$(CC) $*.c
+
+pcibus.o: pcibus.c openpcidata.h
+	$(CC) $*.c
+
+pci_find.o: pci_find.c openpcidata.h
+#	$(CC) $*.c DisAssemble ram:pcifind.asm
+	$(CC) $*.c
+
+pci_in_out.o: pci_in_out.c openpcidata.h
+	$(CC) $*.c
+	
+pci_interrupt.o: pci_interrupt.c openpcidata.h
+	$(CC) $*.c
+
+pci_set_master.o: pci_set_master.c openpcidata.h
+	$(CC) $*.c
+
+pci_readwrite_config.o: pci_readwrite_config.c openpcidata.h
+	$(CC) $*.c
+	
+pci_allocfree_dma_mem.o: pci_allocfree_dma_mem.c openpcidata.h
+	$(CC) $*.c
+
+pci_logictophysic_addr.o: pci_logictophysic_addr.c openpcidata.h
+	$(CC) $*.c
+
+pci_obtainrelease_card.o: pci_obtainrelease_card.c openpcidata.h
+	$(CC) $*.c
+	
+debug.o: debug.c debug.h
+	$(CC) $*.c
+
+memory.o: memory.c memory.h
+	$(CC) $*.c
+
+#InOut.o: InOut.a
+#	$(CC)	$*.a
+
+#InOut.o: InOut.c
+#	$(CC) $*.c DisAssemble ram:InOut.asm
+
+# PROMETHEUS WRAPPER
+PrometheusWrapper.o: PrometheusOpenPci/PrometheusWrapper.c openpcidata.h openpci_protosWrapper.h PrometheusOpenPci/PrometheusWrapper.h
+	$(CC) $*.c debug=full 
+
+Ppci_readwrite_config.o: PrometheusOpenPci/Ppci_readwrite_config.c openpcidata.h
+	$(CC) $*.c
+
+Ppci_set_master.o: PrometheusOpenPci/Ppci_set_master.c openpcidata.h
+	$(CC) $*.c
+
+Ppci_allocfree_dma.o: PrometheusOpenPci/Ppci_allocfree_dma.c openpcidata.h
+	$(CC) $*.c
+
+Ppci_interrupt.o: PrometheusOpenPci/Ppci_interrupt.c openpcidata.h
+	$(CC) $*.c
+
+Ppci_in_out.o: PrometheusOpenPci/Ppci_in_out.c openpcidata.h InOut.h
+	$(CC) $*.c
+
+Ppci_logictophysic_addr.o: PrometheusOpenPci/Ppci_logictophysic_addr.c openpcidata.h
+	$(CC) $*.c
+
+Ppci_obtainrelease_card.o: PrometheusOpenPci/Ppci_obtainrelease_card.c openpcidata.h
+	$(CC) $*.c

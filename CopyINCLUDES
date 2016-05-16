@@ -1,0 +1,17 @@
+copy fd/openpci_lib.fd include:fd/
+copy proto/openpci.h include:proto/
+copy pragmas/openpci_pragmas.h include:pragmas/
+copy clib/openpci_protos.h include:clib/
+copy libraries/openpci.h include:libraries/
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,129 @@
+o 08.10.2009 2.1beta4
+  - Mediator : Removed requirement of GFX card for DMA buffer (if no GFX card DMA allocation
+    disabled and return NULL).
+  - Mediator : Added support for Voodoo Banshee(VendorID/ProductID=0x121a/0x0003) for DMA memory.
+  - Mediator : Fixed S3 Virge 86C325(VendorID/ProductID=0x5333/0x8a01) DMA memory and added support
+    for S3 Virge DX 86C375(VendorID/ProductID=0x5333/0x5631) for DMA memory(need some tests and
+	feedback).
+  - Added new MediatorA1200TX support (Thanks to Robert 'Phibrizzo' Krajcarz).
+
+o 05.06.2005 2.1beta3
+  - Grex & Pegasos1/2 : Fixed a bug in pci_read_config_long() who return bad result for registernum >16 (Thanks to Guido Mersmann)
+  - Add Mediator1200SX support (Thanks to Thomas Siegel)
+
+o 29.03.2005 2.1beta2
+  - Prometheus : Fixed IO or Mem Address detection bit in base_size
+  (Bit0 set to 1=IO Address, Bit0 set to 0=Mem Address) (Titan)
+
+o 25.03.2005 2.1beta1
+  - Prometheus : Fixed Read/WriteConfXXX, pci_physic_to_logic_addr, pci_set_master & 
+    pci_obtain_card/pci_release_card requires prometheus.library v3 (Titan)
+  - Pegasos1/2 & Grex : Fixed Address base value for ROM, pci_obtain_card/pci_release_card bug/crash (Titan)
+  - Mediator : Fixed pci_obtain_card/pci_release_card (Titan)
+  - Amithlon : Fixed pci_obtain_card/pci_release_card (Titan)
+
+o 21.03.2004
+  - Fixed Interrupt	Code for Grex and Pegasos (Titan)
+  - Fixed memory leak : pcidev->reserved memory was not free when lib was flushed (Titan)
+  - Removed warning (Titan)
+
+o 20.03.2004
+  - pci_physic_to_logic_addr() function added in all wrappers (Titan)
+  - pci_obtain_card() function added in all wrappers (Titan)
+  - pci_release_card() function added in all wrappers (Titan)
+  - cleanup and fixed PCIX support (interrupt) (Titan)
+  - Internal changes in pci_dev->reserved structure (lock/unlock mechanism) (Titan)
+
+o 30.11.2003
+  - Mediator : Added new MediatorZ4 board productID (Titan)
+
+o 22.11.2003
+  - Cleanup Grex wrapper and debug (Titan)
+  - Fixed Mediator wrapper (Titan)
+
+o 11.08.2003
+  - Amithlon : Added powerpci 2.x support now that require powerpci.library 2.x (Titan)
+  - Bug corrected in Amithlon (PowerPci) wrapper registernum and val was reversed thanks to Guido Mersmann (Titan)
+
+o 28.07.2003
+  - Removed calls to quark include (Titan)
+  - Added mosquark_private.h for quark calls (Titan)
+
+o 28.04.2003
+  - YEAHHHHHHH Pegasos and Grex fixed that was an horrible bug in the MORPHOS functable
+  all pci_outw/l() and pci_write_config_word/long() was trashed due to a bad cast (unsigned char) (Titan)
+  - makefile, PCIX wrapper cleanup (disabled in pcibus.c need some tests) (Titan)
+  - version bumped to 1.1
+
+o 27.04.2003
+  - bug with C++ corrected libraries/openpci.h in pci_dev structure replaced unsigned int class by unsigned int devclass 
+  thanks to Soyeb Aswat for this bug report (Titan)
+
+o 25.04.2003
+  - bug corrected in GrexOpenPci wrapper Gpci_interrupt.c added CYBPCIINTTAG_MACHINE, CODETYPE_M68K (Titan)
+  
+o 24.03.2003
+  - bug corrected in Amithlon (PowerPci) wrapper Apci_readwrite_config.c registernum
+    and val was reversed thanks to Guido Mersmann (Titan)
+  - version bumped to 1.04
+  
+o 23.02.2003
+  - debug.h New debug stuff for MOS we can disable debug ouput
+  if DebugFlags is not enabled (Titan-cyfm)
+  - New makefile with -mcpu=604e optimization
+  
+o 15.02.2003
+  - Fixed pci_allocdma_mem() now it return Logical address under Pegasos (cyfm)
+  - Fixed Table allocation for Pegasos DMA Mem Alloc, 
+  now the Table is in the linkedlist and allocated dynamically (Titan)
+
+o 14.02.2003
+  - Fixed GCC MOS build error with GrexOpenPci/GrexWrapper.c and GrexOpenPci/Grex.h
+  include new libraries/cybpci.h include used (Titan)
+  - Fixed GrexOpenPci stuff for Pegasos (cyfm)
+
+o 13.09.2002
+  - Bug Fix in Prometheus Wrapper for the PCI CLASS REVISION
+  openpci.library require prometheus.library v2.3 for Prometheus PCI Bus
+
+o 22.08.2002
+  - Bug Fix in Prometheus Wrapper about pci_set_master and Init for detect PCI Card with Bus Master Capable thanks to Krashan
+
+o 18.08.2002
+  - Amithlon IO Addr and Mem Addr are in BE format
+  - Rom Addr and Rom Size added for Amithlon wrapper 
+
+o 31.07.2002
+  - Fix PowerPci Wrapper (add pci_set_irq())
+  - Fix Prometheus Wrapper and Bus Master detection
+
+o 23.06.2002
+  - All the InOut function are inline and in InOut.h
+
+o 10.05.2002
+  - Mediator A1200 DMA problem fixed
+
+o 09.05.2002
+  - Grex A1200/A4000 and Pegasos Wrapper are finished
+
+o 23.03.2002	
+  - OpenPci.library v0.99b (Titan) 
+  - Grex 100% finished (in beta test) (Titan)
+  - Prometheus 100% finished (in beta test) (Titan)
+  - Removed function (You need to upgrade your includes and rebuild all sources) :
+		openpci.library/pci_set_int
+		openpci.library/pci_clear_int
+
+o 14.03.2002
+  - Mediator 100% finished (Titan) 
+  - Prometheus 50% Finished (Titan)   
+  
+o 24.02.2002
+  - Rewrite the main library with pointer function for a good wrapper (Titan)
+  - All Specific Pci BUS files in are in a directory for add easily new other Pci BUS (Titan)
+  
+o 09.02.2002
+  - Begining (Titan)
+
+--
+

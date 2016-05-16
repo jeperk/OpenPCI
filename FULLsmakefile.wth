@@ -1,0 +1,23 @@
+FROM openpci.o
+pci_find.o pci_readwrite_config.o pci_interrupt.o pci_set_master.o
+pci_allocfree_dma_mem.o pci_logictophysic_addr.o pci_obtainrelease_card.o pci_in_out.o
+openpcifunctable.o pcibus.o debug.o
+GrexOpenPci/GrexWrapper.o
+GrexOpenPci/Gpci_readwrite_config.o GrexOpenPci/Gpci_set_master.o
+GrexOpenPci/Gpci_allocfree_dma.o GrexOpenPci/Gpci_interrupt.o
+GrexOpenPci/Gpci_in_out.o GrexOpenPci/Gpci_logictophysic_addr.o GrexOpenPci/Gpci_obtainrelease_card.o GrexOpenPci/memory.o
+PrometheusOpenPci/PrometheusWrapper.o
+PrometheusOpenPci/Ppci_readwrite_config.o PrometheusOpenPci/Ppci_set_master.o
+PrometheusOpenPci/Ppci_allocfree_dma.o PrometheusOpenPci/Ppci_interrupt.o
+PrometheusOpenPci/Ppci_in_out.o PrometheusOpenPci/Ppci_logictophysic_addr.o PrometheusOpenPci/Ppci_obtainrelease_card.o
+PowerPciOpenPci/PowerPciWrapper.o
+PowerPciOpenPci/Apci_readwrite_config.o PowerPciOpenPci/Apci_set_master.o PowerPciOpenPci/Apci_allocfree_dma.o
+PowerPciOpenPci/Apci_interrupt.o PowerPciOpenPci/Apci_in_out.o PowerPciOpenPci/Apci_logicphysic_addr.o PowerPciOpenPci/Apci_obtainrelease_card.o
+MediatorOpenPci/MediatorWrapper.o
+MediatorOpenPci/Mpci_readwrite_config.o MediatorOpenPci/Mpci_set_master.o MediatorOpenPci/Mpci_allocfree_dma.o
+MediatorOpenPci/Mpci_interrupt.o MediatorOpenPci/Mpci_in_out.o MediatorOpenPci/Mpci_logictophysic_addr.o MediatorOpenPci/Mpci_obtainrelease_card.o
+
+LIB lib:sc.lib lib:amiga.lib lib:debug.lib
+NODEBUG
+NOICONS
+TO openpci.library
